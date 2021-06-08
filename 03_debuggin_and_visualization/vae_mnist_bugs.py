@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 
 # Model Hyperparameters
 dataset_path = '~/.pytorch/MNIST_data'
-cuda = True
+cuda = False
 DEVICE = torch.device("cuda" if cuda else "cpu")
 batch_size = 100
 x_dim  = 784
@@ -62,7 +62,7 @@ class Decoder(nn.Module):
     def __init__(self, latent_dim, hidden_dim, output_dim):
         super(Decoder, self).__init__()
         self.FC_hidden = nn.Linear(latent_dim, hidden_dim)
-        self.FC_output = nn.Linear(latent_dim, output_dim)
+        self.FC_output = nn.Linear(hidden_dim, output_dim)
         
     def forward(self, x):
         h     = torch.relu(self.FC_hidden(x))
@@ -113,6 +113,7 @@ for epoch in range(epochs):
         
         overall_loss += loss.item()
         
+        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
     print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", overall_loss / (batch_idx*batch_size))    
