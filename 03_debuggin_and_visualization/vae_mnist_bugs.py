@@ -39,15 +39,15 @@ class Encoder(nn.Module):
         
         self.FC_input = nn.Linear(input_dim, hidden_dim)
         self.FC_mean  = nn.Linear(hidden_dim, latent_dim)
-        self.FC_var   = nn.Linear (hidden_dim, latent_dim)
+        self.FC_log_var   = nn.Linear (hidden_dim, latent_dim)
         self.training = True
         
     def forward(self, x):
         h_       = torch.relu(self.FC_input(x))
         mean     = self.FC_mean(h_)
-        log_var  = self.FC_var(h_)                     
-                                                      
-        z        = self.reparameterization(mean, log_var)
+        log_var  = self.FC_log_var(h_)                     
+                                         
+        z        = self.reparameterization(mean, log_var.exp())
         
         return z, mean, log_var
        
