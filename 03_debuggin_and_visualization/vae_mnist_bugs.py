@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 
 # Model Hyperparameters
-dataset_path = '~/datasets'
+dataset_path = '~/.pytorch/MNIST_data'
 cuda = True
 DEVICE = torch.device("cuda" if cuda else "cpu")
 batch_size = 100
@@ -52,7 +52,7 @@ class Encoder(nn.Module):
         return z, mean, log_var
        
     def reparameterization(self, mean, var):
-        epsilon = torch.randn(*var.shape)
+        epsilon = torch.randn(*var.shape, device=DEVICE)
         
         z = mean + var*epsilon
         
